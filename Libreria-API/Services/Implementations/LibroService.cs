@@ -1,4 +1,5 @@
-﻿using Libreria_API.Models;
+﻿using Libreria_API.DTOs;
+using Libreria_API.Models;
 using Libreria_API.Repositories.Interfaces;
 using Libreria_API.Services.Interfaces;
 
@@ -11,9 +12,10 @@ namespace Libreria_API.Services.Implementations
         {
             _repo = repo;
         }
-        public List<Libro> GetLibrosByFilters(string autor, string categoria, string idioma, string genero)
+        public List<LibroDTO> GetLibrosByFilters(string? titulo, string? autor, string? categoria, string? idioma, string? genero)
         {
-            throw new NotImplementedException();
+            return _repo.GetLibrosByFilters(titulo, autor, categoria, idioma, genero);
         }
+
     }
 }

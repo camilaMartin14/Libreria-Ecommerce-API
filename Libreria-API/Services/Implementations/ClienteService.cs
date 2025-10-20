@@ -14,6 +14,11 @@ namespace Libreria_API.Services.Implementations
             _repo = repo;
         }
 
+        public Cliente? Login(string usuario, string contraseña)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task RegistrarAsync(ClienteDTO dto)
         {
             //if (_repo.ExisteUsuario(dto.Usuario))
@@ -33,14 +38,14 @@ namespace Libreria_API.Services.Implementations
             //await _repo.GuardarCambiosAsync();
         }
 
-        public Cliente? Login(string usuario, string contraseña)
-        {
-            //var cliente = _repo.ObtenerPorUsuario(usuario);
-            //if (cliente == null) return null;
+        //public Cliente? Login(string usuario, string contraseña)
+        //{
+        //    //var cliente = _repo.ObtenerPorUsuario(usuario);
+        //    //if (cliente == null) return null;
 
-            //bool valido = BCrypt.Net.BCrypt.Verify(contraseña, cliente.ContraseñaHash);
-            //return valido ? cliente : null;
-        }
+        //    //bool valido = BCrypt.Net.BCrypt.Verify(contraseña, cliente.ContraseñaHash);
+        //    //return valido ? cliente : null;
+        //}
     }
 
 }

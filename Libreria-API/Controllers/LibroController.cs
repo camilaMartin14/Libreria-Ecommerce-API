@@ -14,36 +14,20 @@ namespace Libreria_API.Controllers
         {
             _service = service;
         }
+
+        [HttpGet("filtrar")]
+        public IActionResult BuscarLibros(string? titulo, string? autor, string? categoria, string? idioma, string? genero)
+        {
+            var libros = _service.GetLibrosByFilters(titulo, autor, categoria, idioma, genero);
+            return Ok(libros);
+        }
+
+
         // GET: api/<LibroController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<LibroController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<LibroController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<LibroController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<LibroController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

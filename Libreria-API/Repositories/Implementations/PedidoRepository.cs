@@ -34,5 +34,10 @@ namespace Libreria_API.Repositories.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public bool UpdateStatus(int id, string estado)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

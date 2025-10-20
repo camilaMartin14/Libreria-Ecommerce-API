@@ -14,8 +14,6 @@ namespace Libreria_API.Controllers
     [ApiController]
     public class ClienteController : ControllerBase
     {
-
-
         private readonly IClienteService _service;
 
         public ClienteController(IClienteService service)
