@@ -41,6 +41,8 @@ public partial class Cliente
 
     public string Usuario { get; set; }
 
+    public string Email { get; set; }
+
     public virtual ICollection<Contacto> Contactos { get; set; } = new List<Contacto>();
 
     public virtual ICollection<Factura> Facturas { get; set; } = new List<Factura>();

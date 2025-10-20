@@ -1,5 +1,6 @@
 ﻿using Libreria_API.Models;
 using Libreria_API.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 
 namespace Libreria_API.Repositories.Implementations
@@ -13,14 +14,14 @@ namespace Libreria_API.Repositories.Implementations
             _context = context;
         }
 
-        public Cliente? ObtenerPorUsuario(string usuario)
-            => _context.Clientes.FirstOrDefault(c => c.Usuario == usuario);
+        public async Task<Cliente?> ObtenerPorUsuarioAsync(string usuario)
+            => await _context.Clientes.FirstOrDefaultAsync(c => c.Usuario == usuario);
 
         public void Agregar(Cliente cliente)
             => _context.Clientes.Add(cliente);
 
-        public bool ExisteUsuario(string usuario)
-            => _context.Clientes.Any(c => c.Usuario == usuario);
+        public async Task<bool> ExisteUsuarioAsync(string usuario)
+            => await _context.Clientes.AnyAsync(c => c.Usuario == usuario);
 
         public async Task GuardarCambiosAsync()
             => await _context.SaveChangesAsync();

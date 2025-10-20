@@ -8,8 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Libreria_API.Controllers
 {
-
-
     [Route("api/[controller]")]
     [ApiController]
     public class ClienteController : ControllerBase
@@ -22,7 +20,7 @@ namespace Libreria_API.Controllers
         }
 
         [HttpPost("registrar")]
-        public async Task<IActionResult> Registrar(ClienteDTO dto)
+        public async Task<IActionResult> Registrar([FromBody] ClienteDTO dto)
         {
             try
             {
@@ -36,13 +34,14 @@ namespace Libreria_API.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            var cliente = _service.Login(dto.Usuario, dto.Contraseña);
+            var cliente = await _service.LoginAsync(dto.Usuario, dto.Contraseña);
             if (cliente == null)
                 return Unauthorized("Usuario o contraseña incorrectos.");
 
             return Ok(new { mensaje = "Login exitoso", idCliente = cliente.CodCliente });
         }
     }
+
 }

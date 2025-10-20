@@ -216,6 +216,9 @@ public partial class LibreriaContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("dpto");
+            entity.Property(e => e.Email)
+                .HasMaxLength(50)
+                .HasColumnName("email");
             entity.Property(e => e.FechaNacimiento).HasColumnName("fecha_nacimiento");
             entity.Property(e => e.FechaRegistro)
                 .HasColumnType("datetime")
@@ -629,6 +632,7 @@ public partial class LibreriaContext : DbContext
 
             entity.Property(e => e.NroPedido).HasColumnName("nro_pedido");
             entity.Property(e => e.CodCliente).HasColumnName("cod_cliente");
+            entity.Property(e => e.Estado).HasMaxLength(50);
             entity.Property(e => e.Fecha)
                 .HasColumnType("datetime")
                 .HasColumnName("fecha");
