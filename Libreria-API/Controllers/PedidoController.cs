@@ -1,4 +1,6 @@
-﻿using Libreria_API.Services.Interfaces;
+﻿using Libreria_API.DTOs;
+using Libreria_API.Models;
+using Libreria_API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -14,36 +16,55 @@ namespace Libreria_API.Controllers
         {
             _service = service;
         }
-        // GET: api/<PedidoController>
+
+        // GET: api/Pedido
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<List<PedidoDTO>> GetAll([FromQuery] DateTime? fecha, [FromQuery] int? codigoCliente)
         {
-            return new string[] { "value1", "value2" };
+            var pedidos = _service.GetAll(fecha, codigoCliente);
+            return Ok(pedidos);
         }
 
-        // GET api/<PedidoController>/5
+        // GET: api/Pedido/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ActionResult<PedidoDTO> GetById(int id)
         {
-            return "value";
+            var pedido = _service.GetPedidoById(id);
+            if (pedido == null) return NotFound();
+            return Ok(pedido);
         }
 
-        // POST api/<PedidoController>
+        // POST: api/Pedido
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<PedidoDTO> Create([FromBody] Pedido pedido)
         {
+            _service.Create(pedido);
+            // Asumiendo que el pedido ya tiene NroPedido asignado después de SaveChanges
+            var dto = _service.GetPedidoById(pedido.NroPedido);
+            return CreatedAtAction(nameof(GetById), new { id = pedido.NroPedido }, dto);
         }
 
-        // PUT api/<PedidoController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // GET: api/Pedido/5/estado
+        [HttpGet("{nroPedido}/estado")]
+        public ActionResult<string> GetEstadoActual(int nroPedido)
         {
+            var estado = _service.ObtenerEstadoActualPedido(nroPedido);
+            return Ok(estado);
         }
 
-        // DELETE api/<PedidoController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // PUT: api/Pedido/5/estado
+        [HttpPut("{nroPedido}/estado")]
+        public IActionResult UpdateStatus(int nroPedido, [FromQuery] int nuevoEstadoId, [FromQuery] string observaciones)
         {
+            try
+            {
+                _service.UpdateStatus(nroPedido, nuevoEstadoId, observaciones);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
