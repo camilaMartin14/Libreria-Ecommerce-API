@@ -71,6 +71,8 @@ public partial class LibreriaContext : DbContext
 
     public virtual DbSet<TrackingEnvio> TrackingEnvios { get; set; }
 
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Autore>(entity =>
@@ -203,11 +205,6 @@ public partial class LibreriaContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("calle");
-            entity.Property(e => e.Contraseña)
-                .IsRequired()
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("contraseña");
             entity.Property(e => e.Cp)
                 .HasMaxLength(10)
                 .IsUnicode(false)
@@ -238,7 +235,6 @@ public partial class LibreriaContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("piso");
-            entity.Property(e => e.Usuario).HasMaxLength(50);
 
             entity.HasOne(d => d.IdBarrioNavigation).WithMany(p => p.Clientes)
                 .HasForeignKey(d => d.IdBarrio)
@@ -259,6 +255,10 @@ public partial class LibreriaContext : DbContext
                 .HasForeignKey(d => d.IdTipoDoc)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_cliente_tiposdoc");
+
+            entity.HasOne(d => d.IdUsuarioNavigation).WithMany(p => p.Clientes)
+                .HasForeignKey(d => d.IdUsuario)
+                .HasConstraintName("fk_clientes_usuarios");
         });
 
         modelBuilder.Entity<Contacto>(entity =>
@@ -736,6 +736,29 @@ public partial class LibreriaContext : DbContext
                 .HasForeignKey(d => d.NroPedido)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_tracking_pedido");
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuarios__5B65BF97E50A9084");
+
+            entity.HasIndex(e => e.NombreUsuario, "UQ__Usuarios__6B0F5AE0413A1B71").IsUnique();
+
+            entity.Property(e => e.ContrasenaHash)
+                .IsRequired()
+                .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.FechaAlta)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.NombreUsuario)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Rol)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("Cliente");
         });
 
         OnModelCreatingPartial(modelBuilder);

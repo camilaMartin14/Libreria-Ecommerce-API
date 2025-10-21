@@ -6,6 +6,6 @@ namespace Libreria_API.Services.Interfaces
     public interface IClienteService
     {
         Task<Cliente?> LoginAsync(string usuario, string contraseña);
-        Task RegistrarAsync(ClienteDTO dto);
+        Task RegistrarAsync(Cliente c, Usuario u);
     }
 }

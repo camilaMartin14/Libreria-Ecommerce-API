@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 4,
-   "ContextClassName": "BDVENTALIBROS06Context",
+   "ContextClassName": "AppDBContext",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,
@@ -129,6 +129,10 @@
       },
       {
          "Name": "[dbo].[tracking_envios]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Usuarios]",
          "ObjectType": 0
       }
    ],

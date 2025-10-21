@@ -15,8 +15,6 @@ public partial class Cliente
 
     public int NroDoc { get; set; }
 
-    public string Contraseña { get; set; }
-
     public int IdTipoDoc { get; set; }
 
     public int IdSexo { get; set; }
@@ -39,9 +37,9 @@ public partial class Cliente
 
     public string Cp { get; set; }
 
-    public string Usuario { get; set; }
-
     public string Email { get; set; }
+
+    public int? IdUsuario { get; set; }
 
     public virtual ICollection<Contacto> Contactos { get; set; } = new List<Contacto>();
 
@@ -56,6 +54,8 @@ public partial class Cliente
     public virtual Sexo IdSexoNavigation { get; set; }
 
     public virtual TiposDocumento IdTipoDocNavigation { get; set; }
+
+    public virtual Usuario IdUsuarioNavigation { get; set; }
 
     public virtual ICollection<Pedido> Pedidos { get; set; } = new List<Pedido>();
 }

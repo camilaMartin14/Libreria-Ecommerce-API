@@ -21,31 +21,67 @@ namespace Libreria_API.Services.Implementations
 
         public async Task<Cliente?> LoginAsync(string usuario, string contraseña)
         {
+            // Buscamos al cliente según el nombre de usuario
             var cliente = await _repo.ObtenerPorUsuarioAsync(usuario);
+
+            // Si no se encontró ningún cliente con ese usuario, devolvemos null (login inválido)
             if (cliente == null) return null;
 
-            var resultado = _hasher.VerifyHashedPassword(cliente, cliente.Contraseña, contraseña);
+            // Verificamos la contraseña
+            //    El método VerifyHashedPassword compara el hash guardado con la contraseña ingresada.
+            //    Devuelve 'Success' si la contraseña es correcta.
+            var resultado = _hasher.VerifyHashedPassword(
+                cliente, // contexto (el objeto que contiene la contraseña hasheada)
+                cliente.IdUsuarioNavigation.ContrasenaHash, // hash guardado en la BD
+                contraseña // contraseña ingresada por el usuario
+            );
+
+            // Si la verificación fue exitosa, devolvemos el cliente;
+            //     si no, devolvemos null (login fallido).
             return resultado == PasswordVerificationResult.Success ? cliente : null;
         }
 
-        public async Task RegistrarAsync(ClienteDTO dto)
-        {
-            if (await _repo.ExisteUsuarioAsync(dto.Usuario))
-                throw new Exception("El usuario ya existe.");
 
-            var cliente = new Cliente
+        public async Task RegistrarAsync(Cliente c, Usuario u)
+        {
+            //Validar que el nombre de usuario no exista
+            if (await _repo.ExisteUsuarioAsync(u.NombreUsuario))
+                throw new Exception("El nombre de usuario ya existe.");
+
+            // Crear un hasher genérico sin dependencia de la entidad Usuario
+            var hasher = new PasswordHasher<object>();
+
+            // Crear el objeto Usuario
+            var usuario = new Usuario
             {
-                Nombre = dto.Nombre,
-                Apellido = dto.Apellido,
-                Email = dto.Email,
-                Usuario = dto.Usuario
+                NombreUsuario = u.NombreUsuario,
+                ContrasenaHash = hasher.HashPassword(null, u.ContrasenaHash),
+                Rol = "Cliente",
+                FechaAlta = DateTime.Now
             };
 
-            // Generar hash seguro de la contraseña
-            cliente.Contraseña = _hasher.HashPassword(cliente, dto.Contraseña);
+            // Crear el objeto Cliente con los datos personales
+            var cliente = new Cliente
+            {
+                Nombre = c.Nombre,
+                Apellido = c.Apellido,
+                NroDoc = c.NroDoc,
+                IdTipoDoc = c.IdTipoDoc,
+                IdSexo = c.IdSexo,
+                IdNacionalidad = c.IdNacionalidad,
+                FechaRegistro = DateTime.Now,
+                FechaNacimiento = c.FechaNacimiento,
+                IdBarrio = c.IdBarrio,
+                Calle = c.Calle,
+                Nro = c.Nro,
+                Piso = c.Piso,
+                Dpto = c.Dpto,
+                Cp = c.Cp,
+                Email = c.Email
+            };
 
-            _repo.Agregar(cliente);
-            await _repo.GuardarCambiosAsync();
+            // Guardar usuario y cliente (el repo maneja ambos)
+            await _repo.AgregarClienteConUsuarioAsync(cliente, usuario);
         }
     }
 }

@@ -5,8 +5,8 @@ namespace Libreria_API.Repositories.Interfaces
         public interface IClienteRepository
         {
             Task<Cliente?> ObtenerPorUsuarioAsync(string usuario);
-            void Agregar(Cliente cliente);
-            Task<bool> ExisteUsuarioAsync(string usuario);
+            Task<Cliente> AgregarClienteConUsuarioAsync(Cliente cliente, Usuario usuario);
+            Task<bool> ExisteUsuarioAsync(string nombreUsuario);
             Task GuardarCambiosAsync();
         }
     }
