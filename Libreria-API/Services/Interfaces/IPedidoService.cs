@@ -8,7 +8,7 @@ namespace Libreria_API.Services.Interfaces
         void Create(Pedido pedido);
         void UpdateStatus(int nroPedido, int nuevoEstadoId, string observaciones);
         List<PedidoDTO> GetAll(DateTime? fecha, int? codigoCliente);
-        Pedido? GetPedidoById(int id);
+        PedidoDTO? GetPedidoById(int id);
         string ObtenerEstadoActualPedido(int nroPedido);
     }
 }

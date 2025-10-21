@@ -12,39 +12,28 @@ namespace Libreria_API.Controllers
     public class PedidoController : ControllerBase
     {
         private readonly IPedidoService _service;
-        public PedidoController(IPedidoService service)
-        {
-            _service = service;
-        }
+        public PedidoController(IPedidoService service) => _service = service;
 
-        // GET: api/Pedido
         [HttpGet]
         public ActionResult<List<PedidoDTO>> GetAll([FromQuery] DateTime? fecha, [FromQuery] int? codigoCliente)
         {
-            var pedidos = _service.GetAll(fecha, codigoCliente);
-            return Ok(pedidos);
+            return Ok(_service.GetAll(fecha, codigoCliente));
         }
 
-        // GET: api/Pedido/5
-        [HttpGet("{id}")]
-        public ActionResult<PedidoDTO> GetById(int id)
-        {
-            var pedido = _service.GetPedidoById(id);
-            if (pedido == null) return NotFound();
-            return Ok(pedido);
-        }
-
-        // POST: api/Pedido
         [HttpPost]
         public ActionResult<PedidoDTO> Create([FromBody] Pedido pedido)
         {
+            // Guardar pedido
             _service.Create(pedido);
-            // Asumiendo que el pedido ya tiene NroPedido asignado después de SaveChanges
-            var dto = _service.GetPedidoById(pedido.NroPedido);
-            return CreatedAtAction(nameof(GetById), new { id = pedido.NroPedido }, dto);
+
+            // Recargar pedido con relaciones
+            var pedidoRecargado = _service.GetPedidoById(pedido.NroPedido);
+            if (pedidoRecargado == null)
+                return BadRequest("No se pudo recuperar el pedido después de crearlo.");
+
+            return StatusCode(201, pedidoRecargado);
         }
 
-        // GET: api/Pedido/5/estado
         [HttpGet("{nroPedido}/estado")]
         public ActionResult<string> GetEstadoActual(int nroPedido)
         {
@@ -52,14 +41,17 @@ namespace Libreria_API.Controllers
             return Ok(estado);
         }
 
-        // PUT: api/Pedido/5/estado
         [HttpPut("{nroPedido}/estado")]
-        public IActionResult UpdateStatus(int nroPedido, [FromQuery] int nuevoEstadoId, [FromQuery] string observaciones)
+        public IActionResult UpdateStatus(int nroPedido, [FromBody] UpdateEstadoDTO dto)
         {
             try
             {
-                _service.UpdateStatus(nroPedido, nuevoEstadoId, observaciones);
+                _service.UpdateStatus(nroPedido, dto.NuevoEstadoId, dto.Observaciones);
                 return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
