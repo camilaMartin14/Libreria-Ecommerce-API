@@ -21,13 +21,5 @@ namespace Libreria_API.Controllers
             var libros = _service.GetLibrosByFilters(titulo, autor, categoria, idioma, genero);
             return Ok(libros);
         }
-
-
-        // GET: api/<LibroController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
     }
 }

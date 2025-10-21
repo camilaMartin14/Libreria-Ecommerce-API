@@ -4,7 +4,6 @@ namespace Libreria_API.DTOs
 {
     public class LibroDTO
     {
-        public int CodLibro { get; set; }
         public string Titulo { get; set; }
         public string Editorial { get; set; }
         public string Idioma { get; set; }

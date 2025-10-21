@@ -50,7 +50,6 @@ namespace Libreria_API.Repositories.Implementations
 
             return query.Select(l => new LibroDTO
             {
-                CodLibro = l.CodLibro,
                 Titulo = l.Titulo,
                 Editorial = l.IdEditorialNavigation.Editorial,
                 Idioma = l.IdIdiomaNavigation.Idioma1,
